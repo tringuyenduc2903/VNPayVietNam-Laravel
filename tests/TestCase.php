@@ -11,6 +11,7 @@ class TestCase extends Orchestra
     public function getEnvironmentSetUp($app): void
     {
         config()->set([
+            'app.faker_locale' => 'vi_VN',
         ]);
     }
 
