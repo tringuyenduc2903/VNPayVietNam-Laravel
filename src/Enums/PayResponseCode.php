@@ -22,7 +22,7 @@ use BenSampo\Enum\Enum;
  * @method static static EXCEEDED_PASSWORD_ATTEMPTS()
  * @method static static OTHER_ERROR()
  */
-final class ResponseCode extends Enum implements LocalizedEnum
+final class PayResponseCode extends Enum implements LocalizedEnum
 {
     const string SUCCESS = '00';
 

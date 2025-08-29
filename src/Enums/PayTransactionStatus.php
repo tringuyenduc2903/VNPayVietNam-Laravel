@@ -17,7 +17,7 @@ use BenSampo\Enum\Enum;
  * @method static static SUSPECTED_FRAUD()
  * @method static static REFUND_REJECTED()
  */
-final class TransactionStatus extends Enum implements LocalizedEnum
+final class PayTransactionStatus extends Enum implements LocalizedEnum
 {
     const string SUCCESS = '00';
 

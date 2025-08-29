@@ -1,9 +1,12 @@
 <?php
 
 use BeetechAsia\VNPay\Enums\OrderType;
+use BeetechAsia\VNPay\Enums\PayResponseCode;
+use BeetechAsia\VNPay\Enums\PayTransactionStatus;
+use BeetechAsia\VNPay\Enums\QueryResponseCode;
+use BeetechAsia\VNPay\Enums\RefundResponseCode;
+use BeetechAsia\VNPay\Enums\RefundTransactionStatus;
 use BeetechAsia\VNPay\Enums\RefundTransactionType;
-use BeetechAsia\VNPay\Enums\ResponseCode;
-use BeetechAsia\VNPay\Enums\TransactionStatus;
 
 return [
 
@@ -94,31 +97,63 @@ return [
         OrderType::MEDICAL_APPOINTMENTS => 'Đăng ký khám/chữa bệnh',
     ],
 
-    TransactionStatus::class => [
-        TransactionStatus::SUCCESS => 'Giao dịch thành công',
-        TransactionStatus::INCOMPLETE => 'Giao dịch chưa hoàn tất',
-        TransactionStatus::ERROR => 'Giao dịch bị lỗi',
-        TransactionStatus::REVERSED => 'Giao dịch đảo (Khách hàng đã bị trừ tiền tại Ngân hàng nhưng GD chưa thành công ở VNPAY)',
-        TransactionStatus::PROCESSING_REFUND => 'VNPAY đang xử lý giao dịch này (GD hoàn tiền)',
-        TransactionStatus::REFUND_REQUEST_SENT => 'VNPAY đã gửi yêu cầu hoàn tiền sang Ngân hàng (GD hoàn tiền)',
-        TransactionStatus::SUSPECTED_FRAUD => 'Giao dịch bị nghi ngờ gian lận',
-        TransactionStatus::REFUND_REJECTED => 'Giao dịch hoàn trả bị từ chối',
+    PayTransactionStatus::class => [
+        PayTransactionStatus::SUCCESS => 'Giao dịch thành công',
+        PayTransactionStatus::INCOMPLETE => 'Giao dịch chưa hoàn tất',
+        PayTransactionStatus::ERROR => 'Giao dịch bị lỗi',
+        PayTransactionStatus::REVERSED => 'Giao dịch đảo (Khách hàng đã bị trừ tiền tại Ngân hàng nhưng Giao dịch chưa thành công ở VNPAY)',
+        PayTransactionStatus::PROCESSING_REFUND => 'VNPAY đang xử lý giao dịch này (Giao dịch hoàn tiền)',
+        PayTransactionStatus::REFUND_REQUEST_SENT => 'VNPAY đã gửi yêu cầu hoàn tiền sang Ngân hàng (Giao dịch hoàn tiền)',
+        PayTransactionStatus::SUSPECTED_FRAUD => 'Giao dịch bị nghi ngờ gian lận',
+        PayTransactionStatus::REFUND_REJECTED => 'Giao dịch hoàn trả bị từ chối',
     ],
 
-    ResponseCode::class => [
-        ResponseCode::SUCCESS => 'Giao dịch thành công',
-        ResponseCode::SUSPECTED_FRAUD => 'Trừ tiền thành công. Giao dịch bị nghi ngờ (liên quan tới lừa đảo, giao dịch bất thường).',
-        ResponseCode::NO_INTERNET_BANKING => 'Giao dịch không thành công do: Thẻ/Tài khoản của khách hàng chưa đăng ký dịch vụ InternetBanking tại ngân hàng.',
-        ResponseCode::INVALID_AUTHENTICATION => 'Giao dịch không thành công do: Khách hàng xác thực thông tin thẻ/tài khoản không đúng quá 3 lần',
-        ResponseCode::TIMEOUT => 'Giao dịch không thành công do: Đã hết hạn chờ thanh toán. Xin quý khách vui lòng thực hiện lại giao dịch.',
-        ResponseCode::ACCOUNT_LOCKED => 'Giao dịch không thành công do: Thẻ/Tài khoản của khách hàng bị khóa.',
-        ResponseCode::INVALID_OTP => 'Giao dịch không thành công do Quý khách nhập sai mật khẩu xác thực giao dịch (OTP). Xin quý khách vui lòng thực hiện lại giao dịch.',
-        ResponseCode::CANCELLED => 'Giao dịch không thành công do: Khách hàng hủy giao dịch',
-        ResponseCode::INSUFFICIENT_BALANCE => 'Giao dịch không thành công do: Tài khoản của quý khách không đủ số dư để thực hiện giao dịch.',
-        ResponseCode::EXCEEDED_DAILY_LIMIT => 'Giao dịch không thành công do: Tài khoản của Quý khách đã vượt quá hạn mức giao dịch trong ngày.',
-        ResponseCode::BANK_MAINTENANCE => 'Ngân hàng thanh toán đang bảo trì.',
-        ResponseCode::EXCEEDED_PASSWORD_ATTEMPTS => 'Giao dịch không thành công do: KH nhập sai mật khẩu thanh toán quá số lần quy định. Xin quý khách vui lòng thực hiện lại giao dịch',
-        ResponseCode::OTHER_ERROR => 'Các lỗi khác (lỗi còn lại, không có trong danh sách mã lỗi đã liệt kê)',
+    PayResponseCode::class => [
+        PayResponseCode::SUCCESS => 'Giao dịch thành công',
+        PayResponseCode::SUSPECTED_FRAUD => 'Trừ tiền thành công. Giao dịch bị nghi ngờ (liên quan tới lừa đảo, giao dịch bất thường).',
+        PayResponseCode::NO_INTERNET_BANKING => 'Giao dịch không thành công do: Thẻ/Tài khoản của khách hàng chưa đăng ký dịch vụ InternetBanking tại ngân hàng.',
+        PayResponseCode::INVALID_AUTHENTICATION => 'Giao dịch không thành công do: Khách hàng xác thực thông tin thẻ/tài khoản không đúng quá 3 lần',
+        PayResponseCode::TIMEOUT => 'Giao dịch không thành công do: Đã hết hạn chờ thanh toán. Xin quý khách vui lòng thực hiện lại giao dịch.',
+        PayResponseCode::ACCOUNT_LOCKED => 'Giao dịch không thành công do: Thẻ/Tài khoản của khách hàng bị khóa.',
+        PayResponseCode::INVALID_OTP => 'Giao dịch không thành công do Quý khách nhập sai mật khẩu xác thực giao dịch (OTP). Xin quý khách vui lòng thực hiện lại giao dịch.',
+        PayResponseCode::CANCELLED => 'Giao dịch không thành công do: Khách hàng hủy giao dịch',
+        PayResponseCode::INSUFFICIENT_BALANCE => 'Giao dịch không thành công do: Tài khoản của quý khách không đủ số dư để thực hiện giao dịch.',
+        PayResponseCode::EXCEEDED_DAILY_LIMIT => 'Giao dịch không thành công do: Tài khoản của Quý khách đã vượt quá hạn mức giao dịch trong ngày.',
+        PayResponseCode::BANK_MAINTENANCE => 'Ngân hàng thanh toán đang bảo trì.',
+        PayResponseCode::EXCEEDED_PASSWORD_ATTEMPTS => 'Giao dịch không thành công do: KH nhập sai mật khẩu thanh toán quá số lần quy định. Xin quý khách vui lòng thực hiện lại giao dịch',
+        PayResponseCode::OTHER_ERROR => 'Các lỗi khác (lỗi còn lại, không có trong danh sách mã lỗi đã liệt kê)',
+    ],
+
+    QueryResponseCode::class => [
+        QueryResponseCode::SUCCESS => 'Yêu cầu thành công',
+        QueryResponseCode::INVALID_CONNECTION_ID => 'Mã định danh kết nối không hợp lệ (kiểm tra lại TmnCode)',
+        QueryResponseCode::INVALID_DATA_FORMAT => 'Dữ liệu gửi sang không đúng định dạng',
+        QueryResponseCode::TRANSACTION_NOT_FOUND => 'Không tìm thấy giao dịch yêu cầu',
+        QueryResponseCode::DUPLICATE_REQUEST => 'Yêu cầu trùng lặp, duplicate request trong thời gian giới hạn của API',
+        QueryResponseCode::INVALID_CHECKSUM => 'Checksum không hợp lệ',
+        QueryResponseCode::OTHER_ERROR => 'Các lỗi khác (lỗi còn lại, không có trong danh sách mã lỗi đã liệt kê)',
+    ],
+
+    RefundTransactionStatus::class => [
+        RefundTransactionStatus::SUCCESS => 'Yêu cầu thành công',
+        RefundTransactionStatus::INVALID_CONNECTION_ID => 'Mã định danh kết nối không hợp lệ (kiểm tra lại TmnCode)',
+        RefundTransactionStatus::INVALID_DATA_FORMAT => 'Dữ liệu gửi sang không đúng định dạng',
+        RefundTransactionStatus::TRANSACTION_NOT_FOUND => 'Không tìm thấy giao dịch yêu cầu hoàn trả',
+        RefundTransactionStatus::DUPLICATE_REFUND_REQUEST => 'Giao dịch đã được gửi yêu cầu hoàn tiền trước đó. Yêu cầu này VNPAY đang xử lý',
+        RefundTransactionStatus::TRANSACTION_NOT_SUCCESSFUL => 'Giao dịch này không thành công bên VNPAY. VNPAY từ chối xử lý yêu cầu',
+        RefundTransactionStatus::INVALID_CHECKSUM => 'Checksum không hợp lệ',
+        RefundTransactionStatus::OTHER_ERROR => 'Các lỗi khác (lỗi còn lại, không có trong danh sách mã lỗi đã liệt kê)',
+    ],
+
+    RefundResponseCode::class => [
+        RefundResponseCode::SUCCESS => 'Yêu cầu thành công',
+        RefundResponseCode::INVALID_CONNECTION_ID => 'Mã định danh kết nối không hợp lệ (kiểm tra lại TmnCode)',
+        RefundResponseCode::INVALID_DATA_FORMAT => 'Dữ liệu gửi sang không đúng định dạng',
+        RefundResponseCode::TRANSACTION_NOT_FOUND => 'Không tìm thấy giao dịch yêu cầu hoàn trả',
+        RefundResponseCode::DUPLICATE_REFUND_REQUEST => 'Giao dịch đã được gửi yêu cầu hoàn tiền trước đó. Yêu cầu này VNPAY đang xử lý',
+        RefundResponseCode::TRANSACTION_NOT_SUCCESSFUL => 'Giao dịch này không thành công bên VNPAY. VNPAY từ chối xử lý yêu cầu',
+        RefundResponseCode::INVALID_CHECKSUM => 'Checksum không hợp lệ',
+        RefundResponseCode::OTHER_ERROR => 'Các lỗi khác (lỗi còn lại, không có trong danh sách mã lỗi đã liệt kê)',
     ],
 
     RefundTransactionType::class => [

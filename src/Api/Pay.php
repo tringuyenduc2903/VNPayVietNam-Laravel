@@ -3,8 +3,8 @@
 namespace BeetechAsia\VNPay\Api;
 
 use BeetechAsia\VNPay\Enums\OrderType;
-use BeetechAsia\VNPay\Enums\ResponseCode;
-use BeetechAsia\VNPay\Enums\TransactionStatus;
+use BeetechAsia\VNPay\Enums\PayResponseCode;
+use BeetechAsia\VNPay\Enums\PayTransactionStatus;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Validator;
@@ -148,7 +148,7 @@ trait Pay
         }
 
         // Giao dịch không thành công
-        if ($response_code === ResponseCode::OTHER_ERROR) {
+        if ($response_code === PayResponseCode::OTHER_ERROR) {
             return [
                 'Message' => 'Confirm Success',
                 'RspCode' => '00',
@@ -171,7 +171,7 @@ trait Pay
             ];
         }
 
-        if ($response_code === ResponseCode::SUCCESS || $transaction_status === TransactionStatus::SUCCESS) {
+        if ($response_code === PayResponseCode::SUCCESS || $transaction_status === PayTransactionStatus::SUCCESS) {
             // Giao dịch đã được confirm
             if ($check_updated_order_callback($order_id, $data)) {
                 return [
