@@ -3,6 +3,9 @@
 namespace BeetechAsia\VNPay;
 
 use BeetechAsia\VNPay\Enums\OrderType;
+use BeetechAsia\VNPay\Enums\ResponseCode;
+use BeetechAsia\VNPay\Enums\TransactionStatus;
+use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Http;
@@ -74,12 +77,126 @@ class VNPay
             );
         }
 
-        return redirect(sprintf('%s?%s', $this->getUrl(), http_build_query($data)));
+        return redirect(sprintf('%s/paymentv2/vpcpay.html?%s', $this->getUrl(), http_build_query($data)));
     }
 
     public function getUrl(): string
     {
         return config('vnpayvietnam.url');
+    }
+
+    public function handleIpn(
+        int|string $order_id,
+        int|float $order_amount,
+        callable $check_updated_order_callback,
+        callable $update_order_callback,
+        ?array $data = null,
+        ?string $hash_secret = null,
+        ?string $secure_hash = null,
+        ?string $response_code = null,
+        ?string $transaction_status = null,
+        ?string $txn_ref = null,
+        int|float|null $amount = null,
+    ): array|false {
+        if (is_null($data)) {
+            $data = request()->except('vnp_SecureHash');
+        }
+
+        if (is_null($hash_secret)) {
+            $hash_secret = config('vnpayvietnam.hash_secret');
+        }
+
+        if (is_null($secure_hash)) {
+            $secure_hash = request('vnp_SecureHash', '');
+        }
+
+        if (is_null($response_code)) {
+            $response_code = request('vnp_ResponseCode');
+        }
+
+        if (is_null($transaction_status)) {
+            $transaction_status = request('vnp_TransactionStatus');
+        }
+
+        if (is_null($txn_ref)) {
+            $txn_ref = request('vnp_TxnRef');
+        }
+
+        if (is_null($amount)) {
+            $amount = is_int($order_amount)
+                ? request()->integer('vnp_Amount')
+                : request()->float('vnp_Amount');
+        }
+
+        $compared_hmac = hash_hmac('sha512', http_build_query($data), $hash_secret);
+
+        // Chữ ký không hợp lệ
+        if (! hash_equals($compared_hmac, $secure_hash)) {
+            return [
+                'Message' => 'Invalid Checksum',
+                'RspCode' => '97',
+            ];
+        }
+
+        // Giao dịch không thành công
+        if ($response_code === ResponseCode::OTHER_ERROR) {
+            return [
+                'Message' => 'Confirm Success',
+                'RspCode' => '00',
+            ];
+        }
+
+        // Không tìm thấy giao dịch được confirm
+        if ($order_id != $txn_ref) {
+            return [
+                'Message' => 'Order Not Found',
+                'RspCode' => '01',
+            ];
+        }
+
+        // Số tiền không hợp lệ
+        if ($order_amount * 100 !== $amount) {
+            return [
+                'Message' => 'Invalid amount',
+                'RspCode' => '04',
+            ];
+        }
+
+        if ($response_code === ResponseCode::SUCCESS || $transaction_status === TransactionStatus::SUCCESS) {
+            // Giao dịch đã được confirm
+            if ($check_updated_order_callback($order_id, $data)) {
+                return [
+                    'Message' => 'Order already confirmed',
+                    'RspCode' => '02',
+                ];
+            }
+
+            $update_order_callback($order_id, $data);
+
+            // Giao dịch thành công
+            return [
+                'Message' => 'Confirm Success',
+                'RspCode' => '00',
+            ];
+        }
+
+        return false;
+    }
+
+    /**
+     * @throws ConnectionException
+     */
+    public function getBankCodes(?string $tmn_code = null): array
+    {
+        if (is_null($tmn_code)) {
+            $tmn_code = config('vnpayvietnam.tmn_code');
+        }
+
+        return $this
+            ->getRequest()
+            ->asForm()
+            ->post('qrpayauth/api/merchant/get_bank_list', compact('tmn_code'))
+            ->json();
     }
 
     public function getRequest(): PendingRequest

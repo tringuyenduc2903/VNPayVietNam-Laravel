@@ -1,6 +1,8 @@
 <?php
 
 use BeetechAsia\VNPay\Enums\OrderType;
+use BeetechAsia\VNPay\Enums\ResponseCode;
+use BeetechAsia\VNPay\Enums\TransactionStatus;
 
 return [
 
@@ -89,6 +91,33 @@ return [
         OrderType::GAME_CARDS => 'Thẻ Game',
         OrderType::PHARMACY_MEDICAL_SERVICES => 'Nhà thuốc - Dịch vụ y tế',
         OrderType::MEDICAL_APPOINTMENTS => 'Đăng ký khám/chữa bệnh',
+    ],
+
+    TransactionStatus::class => [
+        TransactionStatus::SUCCESS => 'Giao dịch thành công',
+        TransactionStatus::INCOMPLETE => 'Giao dịch chưa hoàn tất',
+        TransactionStatus::ERROR => 'Giao dịch bị lỗi',
+        TransactionStatus::REVERSED => 'Giao dịch đảo (Khách hàng đã bị trừ tiền tại Ngân hàng nhưng GD chưa thành công ở VNPAY)',
+        TransactionStatus::PROCESSING_REFUND => 'VNPAY đang xử lý giao dịch này (GD hoàn tiền)',
+        TransactionStatus::REFUND_REQUEST_SENT => 'VNPAY đã gửi yêu cầu hoàn tiền sang Ngân hàng (GD hoàn tiền)',
+        TransactionStatus::SUSPECTED_FRAUD => 'Giao dịch bị nghi ngờ gian lận',
+        TransactionStatus::REFUND_REJECTED => 'Giao dịch hoàn trả bị từ chối',
+    ],
+
+    ResponseCode::class => [
+        ResponseCode::SUCCESS => 'Giao dịch thành công',
+        ResponseCode::SUSPECTED_FRAUD => 'Trừ tiền thành công. Giao dịch bị nghi ngờ (liên quan tới lừa đảo, giao dịch bất thường).',
+        ResponseCode::NO_INTERNET_BANKING => 'Giao dịch không thành công do: Thẻ/Tài khoản của khách hàng chưa đăng ký dịch vụ InternetBanking tại ngân hàng.',
+        ResponseCode::INVALID_AUTHENTICATION => 'Giao dịch không thành công do: Khách hàng xác thực thông tin thẻ/tài khoản không đúng quá 3 lần',
+        ResponseCode::TIMEOUT => 'Giao dịch không thành công do: Đã hết hạn chờ thanh toán. Xin quý khách vui lòng thực hiện lại giao dịch.',
+        ResponseCode::ACCOUNT_LOCKED => 'Giao dịch không thành công do: Thẻ/Tài khoản của khách hàng bị khóa.',
+        ResponseCode::INVALID_OTP => 'Giao dịch không thành công do Quý khách nhập sai mật khẩu xác thực giao dịch (OTP). Xin quý khách vui lòng thực hiện lại giao dịch.',
+        ResponseCode::CANCELLED => 'Giao dịch không thành công do: Khách hàng hủy giao dịch',
+        ResponseCode::INSUFFICIENT_BALANCE => 'Giao dịch không thành công do: Tài khoản của quý khách không đủ số dư để thực hiện giao dịch.',
+        ResponseCode::EXCEEDED_DAILY_LIMIT => 'Giao dịch không thành công do: Tài khoản của Quý khách đã vượt quá hạn mức giao dịch trong ngày.',
+        ResponseCode::BANK_MAINTENANCE => 'Ngân hàng thanh toán đang bảo trì.',
+        ResponseCode::EXCEEDED_PASSWORD_ATTEMPTS => 'Giao dịch không thành công do: KH nhập sai mật khẩu thanh toán quá số lần quy định. Xin quý khách vui lòng thực hiện lại giao dịch',
+        ResponseCode::OTHER_ERROR => 'Các lỗi khác (lỗi còn lại, không có trong danh sách mã lỗi đã liệt kê)',
     ],
 
 ];
