@@ -4,6 +4,7 @@ namespace BeetechAsia\VNPay;
 
 use BeetechAsia\VNPay\Api\Pay;
 use BeetechAsia\VNPay\Api\Query;
+use BeetechAsia\VNPay\Api\Refund;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Support\Facades\Http;
 
@@ -11,6 +12,7 @@ class VNPay
 {
     use Pay;
     use Query;
+    use Refund;
 
     public function getRequest(): PendingRequest
     {

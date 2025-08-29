@@ -1,6 +1,7 @@
 <?php
 
 use BeetechAsia\VNPay\Enums\OrderType;
+use BeetechAsia\VNPay\Enums\RefundTransactionType;
 use BeetechAsia\VNPay\Enums\ResponseCode;
 use BeetechAsia\VNPay\Enums\TransactionStatus;
 
@@ -118,6 +119,11 @@ return [
         ResponseCode::BANK_MAINTENANCE => 'Ngân hàng thanh toán đang bảo trì.',
         ResponseCode::EXCEEDED_PASSWORD_ATTEMPTS => 'Giao dịch không thành công do: KH nhập sai mật khẩu thanh toán quá số lần quy định. Xin quý khách vui lòng thực hiện lại giao dịch',
         ResponseCode::OTHER_ERROR => 'Các lỗi khác (lỗi còn lại, không có trong danh sách mã lỗi đã liệt kê)',
+    ],
+
+    RefundTransactionType::class => [
+        RefundTransactionType::FULL => 'Giao dịch hoàn trả toàn phần',
+        RefundTransactionType::PARTIAL => 'Giao dịch hoàn trả một phần',
     ],
 
 ];
