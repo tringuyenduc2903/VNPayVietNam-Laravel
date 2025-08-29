@@ -6,14 +6,13 @@ use BeetechAsia\VNPay\Enums\OrderType;
 use BeetechAsia\VNPay\Enums\PayResponseCode;
 use BeetechAsia\VNPay\Enums\PayTransactionStatus;
 use Illuminate\Http\Client\ConnectionException;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use InvalidArgumentException;
 
 trait Pay
 {
-    public function createPaymentUrl(array $data, string $algo = 'sha512'): RedirectResponse
+    public function createPaymentUrl(array $data, string $algo = 'sha512'): string
     {
         if (! in_array($algo, ['sha256', 'sha512'])) {
             throw new InvalidArgumentException(trans('Only supports sha256 and sha512 algorithms'));
@@ -75,7 +74,7 @@ trait Pay
             );
         }
 
-        return redirect(sprintf('%s/paymentv2/vpcpay.html?%s', $this->getUrl(), http_build_query($data)));
+        return sprintf('%s/paymentv2/vpcpay.html?%s', $this->getUrl(), http_build_query($data));
     }
 
     /**

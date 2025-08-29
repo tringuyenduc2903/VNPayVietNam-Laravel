@@ -3,11 +3,10 @@
 use BeetechAsia\VNPay\Enums\OrderType;
 use BeetechAsia\VNPay\Facades\VNPay;
 use Illuminate\Http\Client\ConnectionException;
-use Illuminate\Http\RedirectResponse;
 use Random\RandomException;
 
 it(
-    'createPaymentUrl must be redirect to vnpay',
+    'createPaymentUrl must be string',
     /**
      * @throws RandomException
      */
@@ -22,7 +21,7 @@ it(
             'vnp_TxnRef' => fake()->uuid(),
         ]);
 
-        expect($response)->toBeInstanceOf(RedirectResponse::class);
+        expect($response)->toBeString();
     }
 );
 
