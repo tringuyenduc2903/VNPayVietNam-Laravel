@@ -33,7 +33,7 @@ trait Pay
             'vnp_OrderType' => ['required', 'integer', Rule::in(OrderType::getValues())],
             'vnp_ReturnUrl' => ['required', 'string', 'min:10', 'max:255', 'url'],
             'vnp_ExpireDate' => ['required', 'string', 'size:14', 'date_format:YmdHis'],
-            'vnp_TxnRef' => ['required', 'string', 'min:1', 'max:100'],
+            'vnp_TxnRef' => ['required'],
             'vnp_SecureHash' => ['nullable', 'string', 'min:32', 'max:256'],
         ]);
 
